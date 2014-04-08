@@ -1,4 +1,4 @@
 digit_recognition
 =================
 
-Simple neural networks for digit recognition
+Simple neural network for digit recognition
