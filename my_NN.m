@@ -1,5 +1,9 @@
 function test_example_NN
 load ex4data1
+
+addpath(genpath('/Users/yfu/repo/DeepLearnToolbox'));
+addpath('~/Dropbox/Courses/Machine Learning/project/data')
+
 image_files = dir('~/Dropbox/Courses/Machine Learning/project/data/*.png');
 n_files = length(image_files);
 % the matrix to hold all the images
