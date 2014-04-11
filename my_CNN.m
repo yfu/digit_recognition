@@ -3,41 +3,43 @@ function my_CNN
 addpath(genpath('/Users/yfu/repo/DeepLearnToolbox'));
 addpath('~/Dropbox/Courses/Machine Learning/project/data')
 
-load mnist_uint8;
-% [train_x, mu, sigma] = zscore(double(train_x) / 255);
-% test_x = normalize(double(test_x) / 255, mu, sigma);
-train_x = double(reshape(train_x', 28, 28, 60000));
-test_x = double(reshape(test_x', 28, 28, 10000));
-train_y = double(train_y');
+% load mnist_uint8;
+% % [train_x, mu, sigma] = zscore(double(train_x) / 255);
+% % test_x = normalize(double(test_x) / 255, mu, sigma);
+% train_x = double(reshape(train_x', 28, 28, 60000));
+% test_x = double(reshape(test_x', 28, 28, 10000));
+% train_y = double(train_y');
+% test_y = double(test_y');
+
+load ex4data1
+rand('state',sum(100.*clock));
+% Convert y to the needed format
+y_mat = zeros(size(X, 1), 10);
+my_ind = sub2ind(size(X), (1:size(y_mat))', y);
+y_mat(my_ind) = 1;
+
+% Randomly choose some, say 500, images to be the training set.
+% Test set
+test_x_size = 500;
+test_x_ind = randperm(size(X, 1), test_x_size);
+test_x_ind(1:5)
+test_x = X(test_x_ind, :) * 500;
+test_y = y_mat(test_x_ind, :);
 test_y = double(test_y');
 
-% % load ex4data1
-% % Convert y to the needed format
-% y_mat = zeros(size(X, 1), 10);
-% my_ind = sub2ind(size(X), (1:size(y_mat))', y);
-% y_mat(my_ind) = 1;
-% 
-% % Randomly choose some, say 500, images to be the training set.
-% % Test set
-% test_x_size = 500;
-% test_x_ind = randperm(size(X, 1), test_x_size);
-% test_x = X(test_x_ind, :);
-% test_y = y_mat(test_x_ind, :);
-% test_y = double(test_y');
-% 
-% % training set
-% X(test_x_ind, :) = [];
-% y_mat(test_x_ind, :) = [];
-% train_x = X;
+% training set
+X(test_x_ind, :) = [];
+y_mat(test_x_ind, :) = [];
+train_x = X * 500;
 % [train_x, mu, sigma] = zscore(train_x);
 % test_x = normalize(test_x, mu, sigma);
 % displayData(train_x(1:16,:))
-% train_y = y_mat;
-% train_y = double(train_y');
-% 
-% % Convert them to the format that CNN accepts
-% train_x = double(reshape(train_x',20,20,4500));
-% test_x = double(reshape(test_x',20,20,500));
+train_y = y_mat;
+train_y = double(train_y');
+
+% Convert them to the format that CNN accepts
+train_x = double(reshape(train_x',20,20,4500));
+test_x = double(reshape(test_x',20,20,500));
 
 % displayData(X(myX, :));
 
@@ -61,9 +63,9 @@ cnn.layers = {
 };
 cnn = cnnsetup(cnn, train_x, train_y);
 
-opts.alpha = 1;
-opts.batchsize = 50;
-opts.numepochs = 1;
+opts.alpha = 5;
+opts.batchsize = 100;
+opts.numepochs = 5;
 
 cnn = cnntrain(cnn, train_x, train_y, opts);
 
@@ -72,4 +74,4 @@ er
 %plot mean squared error
 figure; plot(cnn.rL);
 
-assert(er<0.12, 'Too big error');
+% assert(er<0.12, 'Too big error');
